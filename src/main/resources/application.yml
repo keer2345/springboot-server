@@ -78,10 +78,7 @@ spring:
     encoding: UTF-8
     cache: false
     servlet:
-      content-type: text/html
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
+      content-type: text/html  
 
 # Sa-Token配置
 sa-token:
