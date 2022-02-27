@@ -1,0 +1,60 @@
+package com.react.framework.model;
+
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
+/**
+ * 自定义Jackson2ObjectMapperBuilderCustomizer
+ * 的Bean，分别指定LocalDate、LocalDateTime和LocalTime的序列化和反序列化类（按须要定义对应的DatetimeFormatter） @Author
+ */
+// @Configuration
+@Slf4j
+public class DateFormatConfig {
+
+  /** Date格式化字符串 */
+  private static final String DATE_FORMAT = "yyyy-MM-dd";
+  /** DateTime格式化字符串 */
+  private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+  /** Time格式化字符串 */
+  private static final String TIME_FORMAT = "HH:mm:ss";
+
+  /**
+   * 自定义Bean
+   *
+   * @return
+   */
+  //  @Bean
+  //  @Primary
+  public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
+    log.info("Jackson2ObjectMapperBuilderCustomizer");
+    return builder ->
+        builder
+            .serializerByType(
+                LocalDateTime.class,
+                new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
+            .serializerByType(
+                LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DATE_FORMAT)))
+            .serializerByType(
+                LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern(TIME_FORMAT)))
+            .deserializerByType(
+                LocalDateTime.class,
+                new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
+            .deserializerByType(
+                LocalDate.class,
+                new LocalDateDeserializer(DateTimeFormatter.ofPattern(DATE_FORMAT)))
+            .deserializerByType(
+                LocalTime.class,
+                new LocalTimeDeserializer(DateTimeFormatter.ofPattern(TIME_FORMAT)));
+  }
+}
